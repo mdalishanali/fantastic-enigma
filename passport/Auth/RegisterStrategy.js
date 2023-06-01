@@ -1,6 +1,6 @@
 const Strategy = require("passport-local").Strategy;
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 
 const SignupStrategy = new Strategy(
@@ -15,12 +15,13 @@ const SignupStrategy = new Strategy(
 
         if (!user) {
           const encryptedPassword = bcrypt.hashSync(password, salt);
-          const { name, email } = req.body;
+          const { first_name, last_name } = req.body;
 
           let newUser = new User({
             email,
             password: encryptedPassword,
-            name,
+            first_name,
+            last_name,
           });
 
           newUser.save((error, inserted) => {
